@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!-- confirmar.html -->
+<html lang="pt-br">
+
+<head>
+    <title>Título da página</title>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <form id="form-menssagem">
+        <h5> Tem certeza ? </h5>
+        <!-- <a class="bt bt-vd" onclick="Cadastrar()" id="sim">SIM </a> -->
+
+        <div class="corpo_aviso">
+            <a class="bt bt-vd" id="sim">SIM </a>
+
+            <a class="bt bt-vm" onclick="BotaoNao()">NAO</a>
+
+
+            <div id="div_gravando" style="visibility:hidden">
+
+                <img id="load" src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif">
+                <div class="gravando-container">
+                    <h3 id="gravando">gravando</h3>
+                    <p class="point-one">.</p>
+                    <p class="point-two">.</p>
+                    <p class="point-three">.</p>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+</body>
+
+</html>
+
+<script>
+    //----------------------------------------------------------------------------------
+    let Progresso = document.getElementById("progres");
+    let CaixaConfirmacao = document.getElementById("form-menssagem");
+    let Gravando = document.getElementById("div_gravando");
+
+
+    function Confirmacao() {
+
+        return new Promise((resolve) => {
+            CaixaConfirmacao.style.display = "block";
+        })
+
+    }
+    //------------------------------------------------------------------------
+    function Cadastrar() {
+        let sim = document.getElementById("sim")
+        sim.onclick = ""
+
+        google.script.run.withSuccessHandler(AlertaGravadoComSucesso).CadastroconfirmadoNoHtml();
+    }
+    //----------------------------------------------------------------------------
+    function AlertaGravadoComSucesso(alerta) {
+
+        google.script.host.close()
+
+
+    }
+    //-----------------------------------------------------------------------------
+    function Confirmado()
+
+    {
+
+        let sim = document.getElementById("sim")
+        sim.onclick = ""
+        let gravando = document.getElementById("div_gravando");
+        gravando.style.visibility = 'visible';
+
+        let progresso = document.getElementById("progres");
+        if (progresso)
+            progresso.style.visibility = 'visible';
+
+        return true;
+
+    }
+    //----------------------------------------------------------------------------------        
+    function BotaoNao() {
+        google.script.host.close()
+
+    }
+</script>
+
+<style>
+    #gravando {
+        position: relative;
+        font-size: 1.1em;
+    }
+    
+    #load {
+        width: 3em;
+    }
+    
+    .gravando-container {
+        display: flex;
+        /* align-items: flex-end; */
+    }
+    
+    .gravando-container p {
+        font-size: 18px;
+        font-weight: 800;
+    }
+    
+    .point-one {
+        animation-name: boll-one;
+        animation-duration: 1s;
+        /* animation-timing-function: ease-in; */
+        animation-iteration-count: infinite;
+        /* animation-delay: 3s;  */
+        */
+    }
+    
+    .point-two {
+        animation-name: boll-two;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        /* animation-fill-mode: both; */
+        /* animation-delay: 3s; */
+        /* opacity: 0; */
+    }
+    
+    .point-three {
+        animation-name: boll-three;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+    }
+    
+    @keyframes boll-one {
+        0% {
+            opacity: 0;
+        }
+        26% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes boll-two {
+        0% {
+            opacity: 0;
+        }
+        52% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes boll-three {
+        0% {
+            opacity: 0;
+        }
+        78% {
+            opacity: .5;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    #div_gravando {
+        /*     border: 1px solid red;  */
+        display: flex;
+        /* position:absolute; */
+        align-items: center;
+        gap: 1em;
+        height: 30%;
+        width: 100%;
+        margin-top: 34%;
+        margin-left: 10%;
+    }
+    
+    #form-menssagem {
+        display: none;
+        position: absolute;
+        border: 3px solid black;
+        height: 13em;
+        width: 12em;
+        top: 3.95em;
+        /* background-color:white; */
+        background-color: #FBBB03;
+        z-index: 2;
+    }
+    
+    .corpo_aviso {
+        background: #FBBB03;
+        height: 6%;
+    }
+    
+    h5 {
+        position: relative;
+        left: 10%;
+        alignment-adjust: center;
+        font-size: 1.6em;
+        left: 0;
+        top: -10%;
+        padding-left: 9%;
+        padding-top: 12%;
+        height: 40%;
+        width: 100%;
+        background: white;
+    }
+    
+    .bt {
+        position: absolute;
+        border: 3px solid #25692A;
+        border-radius: 4px;
+        display: inline-block;
+        cursor: pointer;
+        font-family: Verdana;
+        font-weight: bold;
+        font-size: 1em;
+        padding: 8px 8px;
+        text-decoration: none;
+        top: 42%;
+    }
+    
+    .bt-vd {
+        left: 10%;
+        border-color: #68b465;
+        background: linear-gradient(to bottom, #abd5aa 5%, #68b465 100%);
+        box-shadow: inset 0px 1px 0px 0px #e3f1e3;
+        color: black;
+        text-shadow: 0px 1px 0px #528009;
+    }
+    
+    .bt-lj {
+        border-color: #eb9b48;
+        background: linear-gradient(to bottom, #f7d6b3 5%, #eb9b48 100%);
+        box-shadow: inset 0px 1px 0px 0px #fdf7f0;
+        color: #333;
+        text-shadow: 0px 1px 0px #ffee66;
+    }
+    
+    .bt-az {
+        border-color: #46a7f5;
+        background: linear-gradient(to bottom, #86c6f8 5%, #46a7f5 100%);
+        box-shadow: inset 0px 1px 0px 0px #d7ecfd;
+        color: #fff;
+        text-shadow: 0px 1px 0px #528009;
+    }
+    
+    .bt-vm {
+        /*   margin-left:20px; */
+        right: 10%;
+        border-color: #f61f0e;
+        background: linear-gradient(to bottom, #fca8a1 5%, #f61f0e 100%);
+        box-shadow: inset 0px 1px 0px 0px #fff4f3;
+        color: black;
+        text-shadow: 0px 1px 0px #528009;
+    }
+    
+    .bt-vd:hover {
+        background: linear-gradient(to bottom, #68b465 5%, #abd5aa 100%);
+    }
+    
+    .bt-lj:hover {
+        background: linear-gradient(to bottom, #eb9b48 5%, #f7d6b3 100%);
+    }
+    
+    .bt-az:hover {
+        background: linear-gradient(to bottom, #46a7f5 5%, #86c6f8 100%);
+    }
+    
+    .bt-vm:hover {
+        background: linear-gradient(to bottom, #f61f0e 5%, #fca8a1 100%);
+    }
+    /* .bt:active {
+position:relative;
+top:2px;} */
+</style>

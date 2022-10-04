@@ -1,0 +1,457 @@
+<script>
+    function sortTable(table, col, reverse) {
+
+        if (col == 0 || col == 2 || col == 3) {
+            return;
+        }
+
+        var tb = table.tBodies[0],
+            tr = Array.prototype.slice.call(tb.rows, 0),
+            i;
+
+        reverse = -((+reverse) || -1);
+
+        tr = tr.sort(function(a, b) {
+
+            return reverse * (a.cells[col].textContent.trim()
+                .localeCompare(b.cells[col].textContent.trim())
+            );
+
+        });
+
+        for (i = 0; i < tr.length; ++i) tb.appendChild(tr[i]);
+
+    }
+
+    function makeSortable(table) {
+
+        var th = table.tHead,
+            i;
+
+        th && (th = th.rows[0]) && (th = th.cells);
+
+        if (th) i = th.length;
+
+        else return;
+        while (--i >= 0)(function(i) {
+            var dir = 1;
+            th[i].addEventListener('click', function() {
+                sortTable(table, i, (dir = 1 - dir))
+            });
+        }(i));
+    }
+
+    function makeAllSortable(parent) {
+
+        parent = parent || document.body;
+        var t = parent.getElementsByTagName('table'),
+            i = t.length;
+
+        while (--i >= 0) makeSortable(t[i]);
+    }
+
+    window.onload = function() {
+        makeAllSortable();
+    };
+
+    var CaixaMsg = document.getElementById("CaixaMsg");
+    var TituloMsg = document.getElementById("TituloMsg");
+    var CorpoMsg = document.getElementById("CorpoMsg");
+    var RodapeMsg = document.getElementById("RodapeMsg");
+    var BtnFechar = '<button class = "orange" onclick= "Fechar()" style = "cursor:pointer" ><b> <font color= "black" size = "5">Fechar</font></b></button>';
+
+    function caixaMsgbox(m) {
+
+        CaixaMsg.style.display = "block";
+
+        TituloMsg.innerHTML = "AVISO";
+        CorpoMsg.innerHTML = m;
+        RodapeMsg.innerHTML = BtnFechar;
+
+    }
+
+    function Fechar() {
+        CaixaMsg.style.display = "none";
+    }
+
+    function MascaraCnpj() {
+
+        var CampoCnpj = document.getElementById("Cnpj");
+        var CNPJ = CampoCnpj.value;
+
+        if (CNPJ.length == 2) {
+            CNPJ = CNPJ + "."
+            CampoCnpj.value = CNPJ;
+            return true;
+        }
+
+        if (CNPJ.length == 6) {
+            CNPJ = CNPJ + "."
+            CampoCnpj.value = CNPJ;
+            return true;
+        }
+
+        if (CNPJ.length == 10) {
+            CNPJ = CNPJ + "/"
+            CampoCnpj.value = CNPJ;
+            return true;
+        }
+
+        if (CNPJ.length == 15) {
+            CNPJ = CNPJ + "-"
+            CampoCnpj.value = CNPJ;
+            return true;
+        }
+
+    }
+
+
+    function MascaraTelefone() {
+
+        var CampoTel = document.getElementById("Contato");
+        var Tel = CampoTel.value;
+
+        if (Tel.length == 1) {
+            Tel = "(" + Tel;
+            CampoTel.value = Tel;
+            return true;
+        }
+
+        if (Tel.length == 3) {
+            Tel = Tel + ")";
+            CampoTel.value = Tel;
+            return true;
+        }
+
+        if (Tel.length == 9) {
+            Tel = Tel + "-";
+            CampoTel.value = Tel;
+            return true;
+        }
+
+
+    }
+
+    var CampoData1 = document.getElementById("data1");
+    var CampoData2 = document.getElementById("data2");
+    var CampoCliente = document.getElementById("Cliente");
+    var CampoCnpj = document.getElementById("Cnpj");
+    var CampoContato = document.getElementById("Contato");
+    var CampoEstado = document.getElementById("Estado");
+    var CampoCidade = document.getElementById("Cidade");
+
+    function LimparLista(Campo, Opt, Vazio) {
+
+        while (Campo.length) {
+            Campo.remove(0);
+        }
+
+        var NovaOpcao = document.createElement("option");
+        var Texto = document.createTextNode(Opt);
+        NovaOpcao.appendChild(Texto);
+        Campo.insertBefore(NovaOpcao, Campo.lastChild);
+
+        if (Vazio == "SIM") {
+            var NovaOpcao = document.createElement("option");
+            var Texto = document.createTextNode(" ");
+            NovaOpcao.appendChild(Texto);
+            Campo.insertBefore(NovaOpcao, Campo.lastChild);
+        }
+
+        Campo.options[0].disabled = true;
+
+    }
+
+
+    CampoEstado.addEventListener("change", listaCidades);
+
+    function listaCidades() {
+
+        var Opt = "Escolha uma Cidade";
+        var Vazio = "SIM";
+        LimparLista(CampoCidade, Opt, Vazio);
+
+        var Estado = CampoEstado.value;
+
+        google.script.run.withSuccessHandler(Carregar).Cidade(Estado);
+
+        function Carregar(Cidades) {
+
+            Cidades.forEach(function(r) {
+
+                var NovaOpcao = document.createElement("option");
+                var Texto = document.createTextNode(r[0]);
+                NovaOpcao.appendChild(Texto);
+                CampoCidade.insertBefore(NovaOpcao, CampoCidade.lastChild);
+
+            });
+
+        }
+
+    }
+
+    CampoCnpj.addEventListener('keyup', function(e) {
+        var key = e.which || e.keyCode;
+        if (key == 13) {
+            FiltroDados();
+        }
+    });
+
+    CampoContato.addEventListener('keyup', function(e) {
+        var key = e.which || e.keyCode;
+        if (key == 13) {
+            FiltroDados();
+        }
+    });
+
+    document.getElementById("btnFiltrar").addEventListener("click", FiltroDados);
+    CampoCliente.addEventListener("change", FiltroDados);
+    CampoEstado.addEventListener("change", FiltroDados);
+    CampoCidade.addEventListener("change", FiltroDados);
+
+    function FiltroDados() {
+
+        var node = document.getElementById("CorpoTabela");
+
+        while (node.hasChildNodes()) {
+            node.removeChild(node.lastChild);
+        }
+
+        var dataInicial = CampoData1.value;
+
+        if (dataInicial.length > 0) {
+            var dataQuebrada = dataInicial.split("-");
+            var Ano = dataQuebrada[0];
+            var Mes = dataQuebrada[1];
+            var Dia = dataQuebrada[2];
+            var dataInicial = Ano + "/" + Mes + "/" + Dia
+        }
+
+        var dataFinal = CampoData2.value;
+
+        if (dataFinal.length > 0) {
+            var dataQuebrada = dataFinal.split("-");
+            var Ano = dataQuebrada[0];
+            var Mes = dataQuebrada[1];
+            var Dia = dataQuebrada[2];
+            var dataFinal = Ano + "/" + Mes + "/" + Dia
+        }
+
+        var Cliente = CampoCliente.value;
+        var Cnpj = CampoCnpj.value;
+        var Contato = CampoContato.value;
+        var Estado = CampoEstado.value;
+        var Cidade = CampoCidade.value;
+
+        if (Cliente == "Escolha um Cliente") {
+            var Cliente = "";
+        }
+
+        if (Estado == "Escolha um Estado") {
+            var Estado = "";
+        }
+
+        if (Cidade == "Escolha uma Cidade") {
+            var Cidade = "";
+        }
+
+        if (dataInicial.length == 0 && dataFinal.length != 0) {
+            var dataInicial = dataFinal;
+        };
+
+        if (dataFinal.length == 0 && dataInicial.length != 0) {
+            var dataFinal = dataInicial;
+        };
+
+        if (dataFinal.length == 0 && dataInicial.length == 0) {
+            var dataInicial = "2020/01/01"
+            var dataFinal = "2050/01/01"
+        };
+
+        var dadosRelatorio = {
+            data1: dataInicial,
+            data2: dataFinal,
+            Cliente: Cliente,
+            Cnpj: Cnpj,
+            Contato: Contato,
+            Estado: Estado,
+            Cidade: Cidade,
+        };
+
+        google.script.run.withSuccessHandler(GerarTabela).FiltroClientes(dadosRelatorio);
+
+        function GerarTabela(Carregar) {
+
+            if (Carregar == "NÃO EXISTEM DADOS PARA ESTE FILTRO!") {
+                var m = Carregar;
+                caixaMsgbox(m);
+                return;
+            }
+
+            var CorpoTabela = document.getElementById("CorpoTabela");
+
+            Carregar.forEach(function(r) {
+
+                var Linha = document.createElement("tr");
+
+                var Coluna1 = document.createElement("td");
+                Coluna1.textContent = r[0];
+                var Coluna2 = document.createElement("td");
+                Coluna2.textContent = r[1];
+                var Coluna3 = document.createElement("td");
+                Coluna3.textContent = r[3];
+                var Coluna4 = document.createElement("td");
+                Coluna4.textContent = r[4];
+                var Coluna5 = document.createElement("td");
+                Coluna5.textContent = r[5];
+                var Coluna6 = document.createElement("td");
+                Coluna6.textContent = r[6];
+                var Coluna7 = document.createElement("td");
+                Coluna7.textContent = r[7];
+                var Coluna8 = document.createElement("td");
+                Coluna8.textContent = r[8];
+                var Coluna9 = document.createElement("td");
+                Coluna9.textContent = r[9];
+
+                Linha.appendChild(Coluna1);
+                Linha.appendChild(Coluna2);
+                Linha.appendChild(Coluna3);
+                Linha.appendChild(Coluna4);
+                Linha.appendChild(Coluna5);
+                Linha.appendChild(Coluna6);
+                Linha.appendChild(Coluna7);
+                Linha.appendChild(Coluna8);
+                Linha.appendChild(Coluna9);
+
+                CorpoTabela.appendChild(Linha);
+
+            });
+
+
+        }
+
+    }
+
+    document.getElementById("btnLimpar").addEventListener("click", Limpar);
+
+    function Limpar() {
+
+        CampoData1.value = "";
+        CampoData2.value = "";
+        CampoCliente.value = "";
+        CampoCnpj.value = "";
+        CampoContato.value = "";
+        CampoEstado.value = "";
+
+        var Opt = "Escolha uma Cidade";
+        var Vazio = "NÃO";
+        LimparLista(CampoCidade, Opt, Vazio);
+
+        var node = document.getElementById("CorpoTabela");
+
+        while (node.hasChildNodes()) {
+            node.removeChild(node.lastChild);
+        }
+
+    }
+
+
+    $(document).ready(function() {
+
+        $("#btnExcel").click(function(e) {
+            e.preventDefault();
+
+            var DivTabela = document.getElementById("divTabela");
+            var Dados = new Blob(["\ufeff" + DivTabela.outerHTML], {
+                type: "application/vnd.ms-excel"
+            });
+            var url = window.URL.createObjectURL(Dados);
+
+            var a = document.createElement("a");
+
+            a.href = url;
+
+            a.download = "Dados Filtro Cliente";
+
+            a.click();
+
+        });
+
+    });
+
+
+    document.getElementById("btnPdf").addEventListener("click", CriaPDF);
+
+    function CriaPDF() {
+
+        var minhaTabela = document.getElementById('divTabela').innerHTML;
+
+        var style = "<style>";
+        style = style + "table {width: 100%;font: 12px Calibri;}";
+        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+        style = style + "padding: 2px 3px;text-align: left;}";
+        style = style + "</style>";
+
+        var win = window.open('', '', 'height=700,width=900');
+        win.document.write('<html><head>');
+        win.document.write('<title>FILTRO CLIENTES</title>');
+        win.document.write(style);
+        win.document.write('</head>');
+        win.document.write('<body>');
+        win.document.write(minhaTabela);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+
+    document.addEventListener("DOMContentLoaded", FiltrarAbrir)
+
+    function FiltrarAbrir() {
+
+        FiltroDados();
+
+    }
+
+    var Tabela = document.getElementById("Tab");
+    Tabela.addEventListener("dblclick", SelecionarLinha);
+
+    function SelecionarLinha() {
+
+        var linhas = Tabela.getElementsByTagName("tr");
+
+        for (var i = 0; i < linhas.length; i++) {
+            var linha = linhas[i];
+            linha.addEventListener("click", function() {
+                LinhaSelecionada(this);
+            });
+        }
+
+
+        function LinhaSelecionada(linha) {
+
+            var linhas = linha.parentElement.getElementsByTagName("tr");
+
+            linha.classList.toggle("selecionado");
+            var Id = "";
+
+            var selecao = Tabela.getElementsByClassName("selecionado");
+
+            for (var i = 0; i < selecao.length; i++) {
+
+                var Selecionado = selecao[i];
+
+                Selecionado = Selecionado.getElementsByTagName("td");
+
+                Cliente = Selecionado[1].innerHTML;
+
+                if (Cliente != "_") {
+                    google.script.run.withSuccessHandler().FormCliente(Cliente);
+                }
+
+                return false;
+
+            }
+
+        }
+    }
+</script>

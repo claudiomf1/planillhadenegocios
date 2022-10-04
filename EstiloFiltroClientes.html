@@ -1,0 +1,210 @@
+<style>
+    #Tab {
+        position: absolute;
+        left: 20px;
+        top: 120px;
+        font-size: 12px;
+    }
+    
+    #corpo {
+        background-color: #F5F5F5;
+    }
+    
+    #Tab tr td {
+        cursor: pointer;
+    }
+    
+    #Tab tr:hover td {
+        background-color: orange;
+    }
+    
+    #Tab tr.selecionado td {
+        background-color: yellow;
+    }
+    
+    #data1 {
+        position: absolute;
+        left: 20px;
+        top: 30px;
+        width: 105px;
+        height: 21px;
+    }
+    
+    #Labeldata1 {
+        position: absolute;
+        left: 40px;
+        top: 10px;
+    }
+    
+    #data2 {
+        position: absolute;
+        left: 140px;
+        top: 30px;
+        width: 105px;
+        height: 21px;
+    }
+    
+    #Labeldata2 {
+        position: absolute;
+        left: 170px;
+        top: 10px;
+    }
+    
+    #labelCliente {
+        position: absolute;
+        left: 350px;
+        top: 10px;
+    }
+    
+    #Cliente {
+        position: absolute;
+        left: 270px;
+        top: 30px;
+        width: 205px;
+        height: 25px;
+    }
+    
+    #labelCnpj {
+        position: absolute;
+        left: 560px;
+        top: 10px;
+    }
+    
+    #Cnpj {
+        position: absolute;
+        text-align: center;
+        left: 500px;
+        top: 30px;
+        width: 150px;
+        height: 19.5px;
+    }
+    
+    #labelContato {
+        position: absolute;
+        left: 735px;
+        top: 10px;
+    }
+    
+    #Contato {
+        position: absolute;
+        text-align: center;
+        left: 685px;
+        top: 30px;
+        width: 150px;
+        height: 19.5px;
+    }
+    
+    #labelEstado {
+        position: absolute;
+        left: 940px;
+        top: 10px;
+    }
+    
+    #Estado {
+        position: absolute;
+        left: 865px;
+        top: 30px;
+        width: 200px;
+        height: 25px;
+    }
+    
+    #labelCidade {
+        position: absolute;
+        left: 110px;
+        top: 60px;
+    }
+    
+    #Cidade {
+        position: absolute;
+        left: 20px;
+        top: 80px;
+        width: 230px;
+        height: 25px;
+    }
+    
+    #btnLimpar {
+        position: absolute;
+        left: 775px;
+        top: 80px;
+        width: 70px;
+        height: 25px;
+        background-color: #00FF00;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    
+    #btnFiltrar {
+        position: absolute;
+        left: 685px;
+        top: 80px;
+        width: 70px;
+        height: 25px;
+        background-color: #00BFFF;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    
+    #btnPdf {
+        position: absolute;
+        left: 865px;
+        top: 80px;
+        width: 72px;
+        height: 25px;
+        background-color: #FFFF00;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    
+    #btnExcel {
+        position: absolute;
+        left: 995px;
+        top: 80px;
+        width: 72px;
+        height: 25px;
+        background-color: #FF4500;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    
+    #CaixaMsg {
+        display: none;
+        position: fixed;
+        background: #000;
+        border-radius: 7px;
+        width: 550px;
+        heigth: 250px;
+        left: 270px;
+        top: 120px;
+        z-index: 1;
+    }
+    
+    #CaixaMsg>div {
+        background: #FFF;
+        margin: 6px
+    }
+    
+    #CaixaMsg>div>#TituloMsg {
+        background: #FFFF00;
+        font-size: 22px;
+        padding: 10px;
+        color: #000;
+    }
+    
+    #CaixaMsg>div>#CorpoMsg {
+        background: #4169E1;
+        font-size: 15px;
+        padding: 20px;
+        color: #FFF;
+        text-align: center;
+    }
+    
+    #CaixaMsg>div>#RodapeMsg {
+        background: #4169E1;
+        padding: 10px;
+        text-align: center;
+    }
+</style>

@@ -1,0 +1,103 @@
+<html>
+
+<head>
+
+    <base target="_top">
+
+    <?!=Include("EstiloFiltroClientes") ?>
+
+</head>
+
+<body id="corpo">
+
+    <div id="CaixaMsg">
+        <div>
+            <div id="TituloMsg"></div>
+            <div id="CorpoMsg"></div>
+            <div id="RodapeMsg"></div>
+        </div>
+    </div>
+
+    <label id="Labeldata1">Data Inic.</label>
+    <input id="data1" type="date" onblur="FiltroDados()"></input>
+
+    <label id="Labeldata2">Data Fin.</label>
+    <input id="data2" type="date" onblur="FiltroDados()"></input>
+
+    <label id="labelCliente">Cliente</label>
+    <select id="Cliente" class="browser-default">
+
+  <option value ="<?=Cliente?>" disabled selected>Escolha um Cliente</option>
+  
+    <? for(var i=0;i<list1.length; i++){?>
+
+  <option><?=list1[i];?> </option>
+
+    <?}?>    
+
+  </select>
+
+    <label id="labelCnpj">CNPJ</label>
+    <input id="Cnpj" type="text" onkeyup="MascaraCnpj(this)" maxlength="18" value="<?=Cnpj?>"></input>
+
+    <label id="labelContato">Contato</label>
+    <input id="Contato" type="text" onkeyup="MascaraTelefone(this)" value="<?=Contato?>"></input>
+
+    <label id="labelEstado">Estado</label>
+    <select id="Estado" class="browser-default">
+
+  <option value ="<?=Estado?>" disabled selected>Escolha um Estado</option>
+  
+      <? for(var i=0;i<list2.length; i++){?>
+        
+          <option><?=list2[i];?> </option>
+        
+      <?}?>
+     
+  </select>
+
+    <label id="labelCidade">Cidade</label>
+    <select id="Cidade" class="browser-default">
+
+    <option value ="<?=Cidade?>" disabled selected>Escolha uma Cidade</option>
+
+  </select>
+
+    <div id="divTabela">
+
+        <table id="Tab" width="96%" border="1" cellpadding="1px">
+
+            <thead>
+                <tr>
+                    <th width="6%">DATA</th>
+                    <th width="14%">CLIENTE</th>
+                    <th width="10%">CNPJ</th>
+                    <th width="9%">CONTATO</th>
+                    <th width="12%">RUA</th>
+                    <th width="12%">BAIRRO</th>
+                    <th width="12%">CIDADE</th>
+                    <th width="13%">ESTADO</th>
+                    <th width="12%">OBSERVAÇÃO</th>
+                </tr>
+            </thead>
+
+            <tbody id="CorpoTabela">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <button id="btnLimpar">LIMPAR</button>
+    <button id="btnFiltrar">FILTRAR</button>
+    <button id="btnPdf">PDF</button>
+    <button id="btnExcel">EXCEL</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <?!=Include("FormFiltroClientes-js")?>
+
+</body>
+
+</html>

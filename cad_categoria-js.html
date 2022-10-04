@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<script>
+    let Categoria;
+    var dadosct;
+    let CampoCategoria = document.getElementById("input_cad_categoria_servico");
+    let CampoListaCategoria = document.getElementById("select_categoria");
+    //let CampoListaCategoria = document.querySelector('select_categoria')
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        document.getElementById("btn_salvar_categoria").addEventListener("click", Bnt_Salvar_categoria);
+        document.getElementById("btn_fechar").addEventListener("click", Fechar);
+        document.getElementById("searchInput").addEventListener("input", btnInput);
+        document.getElementById("searchResults").addEventListener("click", btnExcluir);
+
+
+        document.getElementById("sim").addEventListener("click", () => {
+            if (Confirmado())
+
+                google.script.run.withSuccessHandler(Retorno)
+                .SalvarCategoria(Categoria);
+
+            function Retorno(r) {
+
+                Gravando.style.visibility = 'hidden';
+                Progresso.style.visibility = 'hidden';
+                CaixaConfirmacao.style.display = "none";
+                var m = r;
+                caixaMsgbox(m);
+                document.getElementById("input_cad_categoria_servico").value = "";
+
+            }
+        });
+
+
+        document.getElementById("select_categoria").addEventListener("change", Pesquisar);
+
+        function Pesquisar() {
+
+            let nomeCategoria = CampoListaCategoria.value;
+
+            google.script.run.withSuccessHandler(Carregar).PesquisarCategoria(nomeCategoria);
+
+        }
+
+        function Carregar(r) {
+
+            if (r != "CATEGORIA NÃO ENCONTRADA!") {
+
+                CampoCategoria.value = r[0];
+                M.updateTextFields();
+
+
+            } else {
+
+                var m = r;
+                caixaMsgbox(m);
+
+            }
+
+        }
+        //--------------------------------------------------------------------
+        document.getElementById("btnEditar").addEventListener("click", EditarCategoria);
+
+        function EditarCategoria() {
+
+            let nomeCategoria = CampoListaCategoria.value;
+            let Categoria = CampoCategoria.value;
+
+            nomeCategoria = nomeCategoria.trim();
+            Categoria = Categoria.trim();
+
+
+            if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
+                var m = "PRECISA SELECIONAR CATEGORIA NA LISTA!";
+                caixaMsgbox(m);
+                return
+            }
+
+            if (nomeCategoria == "" || Categoria == "") {
+                var m = "PRECISA PREENCHER TODOS OS CAMPOS!";
+                caixaMsgbox(m);
+                return;
+            }
+
+            var Dados = {
+                nomeCategoria: nomeCategoria,
+                Categoria: Categoria,
+
+            };
+
+            google.script.run.withSuccessHandler(Retorno).EditarCategoria(Dados);
+
+            function Retorno(r) {
+
+                var m = r;
+                caixaMsgbox(m);
+
+                if (r != "CATEGORIA NÃO ENCONTRADA!") {
+                    Limpar();
+                }
+
+            }
+
+        }
+        //---------------------------------------------------------------------        
+        //-------------------------------------------------------------------
+
+        //-------------------------------------------------------------
+    })
+
+    //------------------------------------------------------------------------
+    var Confirm = new Mensagem();
+
+    function Mensagem() {
+
+        this.Executar = function() {
+
+            CaixaMsg.style.display = "block";
+
+            TituloMsg.innerHTML = "AVISO";
+            CorpoMsg.innerHTML = "DESEJA REALMENTE EXCLUIR?";
+
+            let BtnSim = '<button class = "green" onclick = "Confirm.Sim()" style = "cursor:pointer" ><b><font color = "black" size = "5">Sim</font></b></button>';
+
+            let BtnNao = '<button class = "red" onclick = "Confirm.Nao()" style = "cursor:pointer" ><b><font color = "black"  size = "5">Não</font></b></button>';
+
+
+            RodapeMsg.innerHTML = BtnSim + BtnNao;
+
+        }
+
+        this.Nao = function() {
+            Fechar();
+        }
+
+        this.Sim = function() {
+
+            let nomeCategoria = CampoListaCategoria.value;
+
+            if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
+                CorpoMsg.innerHTML = "CANCELADO. CAMPO LISTA NÃO PODE SER VAZIO!";
+                RodapeMsg.innerHTML = BtnFechar;
+                return;
+            }
+
+            ExcluirCategoria();
+
+        }
+
+    }
+    //---------------------------------------------------------------
+    function ExcluirCategoria() {
+
+        let nomeCategoria = CampoListaCategoria.value;
+
+
+        google.script.run.withSuccessHandler(Excluir).ExcluirCategoria(nomeCategoria);
+
+
+        function Excluir(r) {
+            let m = r;
+            if (r == "EXCLUIDA COM SUCESSO!") {
+                //  AtualizaCategorias();
+                caixaMsgbox(m);
+                Limpar();
+            } else {
+                m = r;
+                CorpoMsg.style.fontSize = "1em"
+                caixaMsgbox(m);
+            }
+
+        }
+
+    }
+    //--------------------------------------------------------------------------------
+    function Limpar() {
+
+
+
+        let CampoListaCategoria = document.getElementById("select_categoria");
+
+
+        // var option = CampoListaCategoria.options[CampoListaCategoria.selectedIndex]
+        var option = CampoListaCategoria.options[1]
+
+        CampoListaCategoria.remove(CampoListaCategoria.selectedIndex);
+        // let Select = document.getElementById("sel");
+        // M.FormSelect.init(Select);
+        //  M.FormSelect.updateTextFields(CampoListaCategoria);
+
+    }
+    //-------------------------------------------
+    function CaixaAlta(e) {
+        var ss = e.target.selectionStart;
+        var se = e.target.selectionEnd;
+        e.target.value = e.target.value.toUpperCase();
+        e.target.selectionStart = ss;
+        e.target.selectionEnd = se;
+    }
+    //----------------------------------------------------------------------------
+
+    //---------------------------------------------------------------
+    function Bnt_Salvar_categoria() {
+        Categoria = document.getElementById("input_cad_categoria_servico").value;
+
+        Categoria = Categoria.trim();
+
+        if (Categoria == "") {
+            var m = "FAVOR PREENCHER CAMPO CATEGORIA!";
+            caixaMsgbox(m);
+            return false;
+        }
+        Confirmacao();
+
+
+    }
+    //-------------------------------------------------------------------
+    function AtualizaCategorias() {
+        CampoListaCategoria.options.length = -1;
+    }
+    //----------------------------------------------------------------------
+    function setDataForSearchCt() {
+        google.script.run.withSuccessHandler(function(options) {
+
+            dadosct = options.slice()
+
+        }).getDataForSearchCt()
+    }
+    setDataForSearchCt() // carrega a variavel dadosct
+        //-----------------------------------------------------------------------------------
+    function search() {
+
+        // dadosct.sort()
+        var searchInput = document.getElementById("searchInput").value.toString().toLowerCase().trim()
+
+        var searchWords = searchInput.split(/\s+/)
+
+        var searchColumnar = [0, 1]
+
+        // and or
+        var resultsArray = searchInput === "" ? [] : dadosct.filter(function(r) {
+
+
+            return searchWords.every(function(wordCd) {
+                return searchColumnar.some(function(colIndexCd) {
+                    return r[colIndexCd].toString().toLowerCase().indexOf(wordCd) !== -1
+                })
+            })
+        })
+
+        var searchResultsBox = document.getElementById("searchResults")
+        var templateBox = document.getElementById("rowTemplate")
+        var template = templateBox.content
+
+        searchResultsBox.innerHTML = ""
+
+        resultsArray.forEach(function(r) {
+
+
+            var tr = template.cloneNode(true)
+            var idColuna = tr.querySelector(".se-IDt")
+            var categoriaColuna = tr.querySelector(".se-categoria")
+
+            idColuna.textContent = r[0]
+            categoriaColuna.textContent = r[1]
+
+            searchResultsBox.appendChild(tr)
+
+        })
+
+    }
+    //---------------------------------------------------------------------------------------------
+    const btnInput = (e) => {
+
+        if (e.target.matches("#searchInput")) {
+
+            search()
+
+        }
+
+
+    }
+    const btnExcluir = (e) => {
+
+        if (e.target.matches(".btn")) {
+
+            excluir(e)
+
+        }
+
+
+    }
+
+    function excluir(e) {
+        //var categoria = e.target.firstChild.textContent
+        var categoria = e.target.parentNode.parentNode.parentNode.childNodes[0].textContent
+            // var categoria = e.target.childNodes[0].textContent
+        alert("cliquei no botao " + categoria)
+            // firstChild.textContent
+    }
+</script>

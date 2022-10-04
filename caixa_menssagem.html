@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+</head>
+
+<body>
+    <div id="CaixaMsg">
+
+        <div id="TituloMsg">
+            <div id="aviso">AVISO</div>
+            <button id="btn_fechar" onclick="Fechar() "> X  </button>
+        </div>
+        <div id="CorpoMsg"></div>
+        <div id="RodapeMsg"></div>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    let CaixaMsg = document.getElementById("CaixaMsg");
+
+    let TituloMsg = document.getElementById("TituloMsg");
+    let CorpoMsg = document.getElementById("CorpoMsg");
+    let RodapeMsg = document.getElementById("RodapeMsg");
+
+
+    function Fechar() {
+        CaixaMsg.style.display = "none";
+        let gravando = document.getElementById("progres");
+        if (gravando)
+            gravando.style.visibility = 'hidden';
+    }
+    //------------------------------------------------------------
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    //------------------------------------------------------------
+
+
+    //-----------------------------------------------------------
+    async function caixaMsgbox(m) {
+
+        if (m.includes("SUCESSO")) {
+            CorpoMsg.style.backgroundColor = "#20B2AA"; // verde
+        } else {
+            CorpoMsg.style.backgroundColor = "#FBBB03"; // amarelo
+        }
+
+        CaixaMsg.style.display = "block";
+
+
+        CorpoMsg.innerHTML = m;
+
+        await sleep(2000);
+
+        CaixaMsg.style.display = "none";
+
+
+    }
+</script>
+
+<style>
+    body {
+        font-family: "Open Sans", sans-serif;
+    }
+    
+    #CaixaMsg {
+        display: none;
+        position: relative;
+        border-radius: 7px;
+        border: solid black;
+        width: 200px;
+        height: 160px;
+        top: -40px;
+        z-index: 2;
+        background-color: white;
+    }
+    
+    #CaixaMsg>#TituloMsg {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: #000;
+        /* border:solid 1px red; */
+        width: 100%;
+        height: 30%;
+    }
+    
+    #CaixaMsg>#TituloMsg>button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 0.65em;
+        color: black;
+        background: #FFF8DC;
+        height: 1.5em;
+        width: 1.5em;
+        cursor: pointer;
+    }
+    
+    #CaixaMsg>#CorpoMsg {
+        position: absolute;
+        background: #FFF8DC;
+        background: #FBBB03;
+        font-size: 15px;
+        padding: 15px;
+        color: black;
+        text-align: center;
+        height: 70%;
+        width: 100%;
+    }
+    
+    #CaixaMsg>#RodapeMsg {
+        position: absolute;
+        /* height: 30%; */
+        bottom: 5px;
+        left: center;
+    }
+    
+    .progress {
+        position: absolute;
+        bottom: 5%;
+    }
+</style>

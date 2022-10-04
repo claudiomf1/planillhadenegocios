@@ -1,0 +1,87 @@
+<script>
+
+
+var select = document.getElementById("select_categoria");
+
+ let Servico,Categoria,IdCategoria;
+
+//--------------------------------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function() {
+        
+        document.getElementById("btn_salvar_serv_padrao").addEventListener("click",Btn_salvar_serv_padrao);
+        document.getElementById("btn_fechar").addEventListener("click",Fechar);
+
+        document.getElementById("sim").addEventListener("click", () => {
+                                                                   if(Confirmado())
+                                                                  //   alert("2 Este é o id "+ IdCategoria)
+                                                                     google.script.run.withSuccessHandler(Retorno)
+                                                                     .SalvarSevicoPadrao(Servico,IdCategoria);
+                                                                     
+                                                                    function Retorno(r) { 
+                                                                   
+                                                                    Gravando.style.visibility = 'hidden';
+                                                                    
+                                                                    CaixaConfirmacao.style.display="none";
+                                                                    var m = r;
+                                                                    caixaMsgbox(m);
+                                                                    document.getElementById("input_cad_categoria_servico").value = "";
+
+                                                                                        }  
+                                                                     });
+   }
+)
+
+//-----------------------------------------------------------------------------
+function Btn_salvar_serv_padrao()
+{
+  
+   Servico = document.getElementById("input_serv_padrao").value;
+  let m
+   Servico = Servico.trim();
+        
+  if (Servico == ""){   
+     m = "FAVOR PREENCHER CAMPO SERVIÇO!";
+    caixaMsgbox(m);
+    return false;
+  }  
+  
+   Categoria= document.getElementById("select_categoria").value;
+  Categoria=Categoria.trim();
+   
+  if( (Categoria !="Escolha a categoria..." && Categoria == "") || Categoria ==="Escolha a categoria...")
+  {
+    m =  "FAVOR SELECIONAR A CATEGORIA!";
+   
+    caixaMsgbox(m);
+    return false;
+  }
+ 
+   PegaIdCategoria(Categoria)
+  
+  
+  
+     
+ 
+
+}
+//----------------------------------------------------------------------
+function PegaIdCategoria(categoria)
+{
+   return new Promise((resolve) => {
+                                    google.script.run.withSuccessHandler(Retorno).PegarIdCategoria(categoria);
+                                    let id_cat
+                                    
+                                    
+                                    function Retorno(id)
+
+                                    {
+                                      IdCategoria=id
+                                      //alert("1 Este é o id "+ IdCategoria)
+                                    Confirmacao()
+                                    }
+                                  return IdCategoria 
+                                  
+                                  }
+                  )
+}
+</script>
