@@ -12,26 +12,26 @@
         document.getElementById("btn_salvar_categoria").addEventListener("click", Bnt_Salvar_categoria);
         document.getElementById("btn_fechar").addEventListener("click", Fechar);
         document.getElementById("searchInput").addEventListener("input", btnInput);
-        document.getElementById("searchResults").addEventListener("click", btnExcluir);
+        document.getElementById("searchResults").addEventListener("click", btnExcluirEditar);
 
 
-        document.getElementById("sim").addEventListener("click", () => {
-            if (Confirmado())
+        // document.getElementById("sim").addEventListener("click", () => {
+        //     if (Confirmado())
 
-                google.script.run.withSuccessHandler(Retorno)
-                .SalvarCategoria(Categoria);
+        //         google.script.run.withSuccessHandler(Retorno)
+        //         .SalvarCategoria(Categoria);
 
-            function Retorno(r) {
+        //     function Retorno(r) {
 
-                Gravando.style.visibility = 'hidden';
-                Progresso.style.visibility = 'hidden';
-                CaixaConfirmacao.style.display = "none";
-                var m = r;
-                caixaMsgbox(m);
-                document.getElementById("input_cad_categoria_servico").value = "";
+        //         Gravando.style.visibility = 'hidden';
+        //         Progresso.style.visibility = 'hidden';
+        //         CaixaConfirmacao.style.display = "none";
+        //         var m = r;
+        //         caixaMsgbox(m);
+        //         document.getElementById("input_cad_categoria_servico").value = "";
 
-            }
-        });
+        //     }
+        // });
 
 
         document.getElementById("select_categoria").addEventListener("change", Pesquisar);
@@ -115,48 +115,46 @@
 
     function Mensagem() {
 
-        this.Executar = function() {
+        this.Executar = function(dados) {
 
             CaixaMsg.style.display = "block";
 
             TituloMsg.innerHTML = "AVISO";
             CorpoMsg.innerHTML = "DESEJA REALMENTE EXCLUIR?";
 
+            let BtnNao = '<button class = "red" onclick = "Confirm.Nao()" style = "cursor:pointer" ><b><font color = "black"  size = "5">Não</font></b></button>';
             let BtnSim = '<button class = "green" onclick = "Confirm.Sim()" style = "cursor:pointer" ><b><font color = "black" size = "5">Sim</font></b></button>';
 
-            let BtnNao = '<button class = "red" onclick = "Confirm.Nao()" style = "cursor:pointer" ><b><font color = "black"  size = "5">Não</font></b></button>';
-
-
             RodapeMsg.innerHTML = BtnSim + BtnNao;
+            this.Sim = function() {
 
+                // let nomeCategoria = CampoListaCategoria.value;
+
+                // if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
+                //     CorpoMsg.innerHTML = "CANCELADO. CAMPO LISTA NÃO PODE SER VAZIO!";
+                //     RodapeMsg.innerHTML = BtnFechar;
+                //     return;
+                // }
+
+
+                ExcluirCategoria(dados[1]);
+
+            }
         }
 
         this.Nao = function() {
             Fechar();
         }
 
-        this.Sim = function() {
 
-            let nomeCategoria = CampoListaCategoria.value;
-
-            if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
-                CorpoMsg.innerHTML = "CANCELADO. CAMPO LISTA NÃO PODE SER VAZIO!";
-                RodapeMsg.innerHTML = BtnFechar;
-                return;
-            }
-
-            ExcluirCategoria();
-
-        }
 
     }
     //---------------------------------------------------------------
-    function ExcluirCategoria() {
-
-        let nomeCategoria = CampoListaCategoria.value;
+    function ExcluirCategoria(idcategoria) {
 
 
-        google.script.run.withSuccessHandler(Excluir).ExcluirCategoria(nomeCategoria);
+
+        google.script.run.withSuccessHandler(Excluir).ExcluirCategoria(idcategoria);
 
 
         function Excluir(r) {
@@ -282,11 +280,20 @@
 
 
     }
-    const btnExcluir = (e) => {
+    const btnExcluirEditar = (e) => {
 
         if (e.target.matches(".btn")) {
 
-            excluir(e)
+            let dados = e.target.parentNode.parentNode.textContent
+            dados = dados.split(/\s{2,}/) // expressão regular para criar um array dos dados
+
+            if (e.target.textContent == "Editar") {
+
+            } else { // se nao for pra editar entao so pode ser para excluir
+
+                Confirm.Executar(dados)
+            }
+            // excluir(e)
 
         }
 
@@ -295,9 +302,11 @@
 
     function excluir(e) {
         //var categoria = e.target.firstChild.textContent
-        var categoria = e.target.parentNode.parentNode.parentNode.childNodes[0].textContent
+        var categoria = e.target.parentNode.parentNode.textContent
+        categoria = categoria.split(/\s{2,}/)
+        var total = categoria.length
             // var categoria = e.target.childNodes[0].textContent
-        alert("cliquei no botao " + categoria)
+        alert("cliquei no botao " + categoria[2] + ", " + categoria[3])
             // firstChild.textContent
     }
 </script>

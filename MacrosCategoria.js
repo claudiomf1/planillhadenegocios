@@ -156,11 +156,11 @@ function EditarCategoria(Dados) {
 
 }
 //-------------------------------------------------------------
-function ExcluirCategoria(nomeCategoria) {
+function ExcluirCategoria(idcategoria) {
 
     const user = LockService.getScriptLock();
     user.tryLock(10000);
-    let idcategoria = IdCategoria(nomeCategoria)
+
 
     if (user.hasLock()) {
 
@@ -168,7 +168,7 @@ function ExcluirCategoria(nomeCategoria) {
         let guiaCli_rel_categorias = TabelaBanco("cli_rel_categorias");
 
         let ultima_linha_com_dados_categoria = UltimaLinhaCom_dados_Da_Planilha(guiaCategoria, "A")
-        let dadosCategorias = guiaCategoria.getRange("B6:" + "B" + ultima_linha_com_dados_categoria).getValues();
+        let dadosCategorias = guiaCategoria.getRange("A6:" + "B" + ultima_linha_com_dados_categoria).getValues();
         let dadosCli_rel_categorias = guiaCli_rel_categorias.getRange("C6:C").getValues()
 
         let ver = dadosCli_rel_categorias.filter(function(value, i, arr) {
@@ -186,7 +186,7 @@ function ExcluirCategoria(nomeCategoria) {
 
         for (let linha = 0; linha < dadosCategorias.length; linha++) {
 
-            if (dadosCategorias[linha][0] == nomeCategoria) {
+            if (dadosCategorias[linha][0] == idcategoria) {
 
                 let i = linha + 6;
                 guiaCategoria.deleteRow(i);
