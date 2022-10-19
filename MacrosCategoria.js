@@ -181,7 +181,7 @@ function ExcluirCategoria(idcategoria) {
             dadosCategorias.length = 0;
             dadosCli_rel_categorias.length = 0;
 
-            return "NÃO PODE SER EXCLUÍDA. JÁ TEM CLIENTE USANDO!";
+            return "NÃO Pode. TEM CLIENTE USANDO!";
         }
 
         for (let linha = 0; linha < dadosCategorias.length; linha++) {

@@ -9,7 +9,7 @@
 
      }
 
-     //let oldCellValue = e.oldValue;
+
 
 
      //	let col_para_novo_registro=ColParaNovoRegistro(e)
@@ -86,7 +86,7 @@
                  CadastraNovaCategoria(categoria, planilha_da_lista_pro_combo, e)
                  GerarComboCategorias(e)
              } else {
-                 var spreadsheet = SpreadsheetApp.getActive();
+                 let spreadsheet = SpreadsheetApp.getActive();
                  spreadsheet.getRange('B' + e.getActiveRange().getRow()).activate();
                  spreadsheet.getActiveRangeList().clear({ contentsOnly: true, skipFilteredRows: true });
              }
@@ -137,7 +137,7 @@
 
      aba_origem = Aba(aba_origem)
 
-     nome_aba = aba_origem.getSheetName()
+     let nome_aba = aba_origem.getSheetName()
 
      let celula = coluna_aba_origem + lin_para_gravar
 
@@ -314,17 +314,13 @@
 
  //--------------------------------------------------------------------------------------------
  function Numero_proximo_id(aba, coluna_aba) {
-     let numero_registros
+     let numero_ultimo_registro
 
-     aba = Aba(aba)
+     let intervalo = coluna_aba + linha_inicial_dos_dados
 
-     let intervalo = coluna_aba + linha_inicial_dos_dados + ":" + coluna_aba
+     numero_ultimo_registro = aba.getRange(intervalo).getNextDataCell(SpreadsheetApp.Direction.DOWN).getValue()
 
-
-     numero_registros = aba.getRange(intervalo).getValues()
-         .filter(el => el[0] != "").length
-
-     return numero_registros + 1
+     return numero_ultimo_registro + 1
 
  }
  //--------------------------------------------------------------------------------------------

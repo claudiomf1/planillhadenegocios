@@ -115,15 +115,15 @@
 
     function Mensagem() {
 
-        this.Executar = function(dados) {
-
+        this.Executar = function(dados, e) {
+            let menssagem
             CaixaMsg.style.display = "block";
 
             TituloMsg.innerHTML = "AVISO";
             CorpoMsg.innerHTML = "DESEJA REALMENTE EXCLUIR?";
 
-            let BtnNao = '<button class = "red" onclick = "Confirm.Nao()" style = "cursor:pointer" ><b><font color = "black"  size = "5">Não</font></b></button>';
-            let BtnSim = '<button class = "green" onclick = "Confirm.Sim()" style = "cursor:pointer" ><b><font color = "black" size = "5">Sim</font></b></button>';
+            let BtnNao = '<button class = "btn btn-outline-dark" onclick = "Confirm.Nao()"  style = "cursor:pointer;border-radius: 5px" ><b><font   size = "4">Não</font></b></button>';
+            let BtnSim = '<button class = "btn btn-outline-danger" onclick = "Confirm.Sim()" style = "cursor:pointer;border-radius: 5px;text-align: center  " ><b><font  size = "4">Sim</font></b></button>';
 
             RodapeMsg.innerHTML = BtnSim + BtnNao;
             this.Sim = function() {
@@ -137,9 +137,11 @@
                 // }
 
 
-                ExcluirCategoria(dados[1]);
+
+                menssagem = ExcluirCategoria(dados, e); // excluo do banco de dados
 
             }
+            return menssagem
         }
 
         this.Nao = function() {
@@ -150,19 +152,21 @@
 
     }
     //---------------------------------------------------------------
-    function ExcluirCategoria(idcategoria) {
+    function ExcluirCategoria(dados, e) {
 
+        let idcategoria = dados[1]
 
 
         google.script.run.withSuccessHandler(Excluir).ExcluirCategoria(idcategoria);
 
+        let m
 
         function Excluir(r) {
-            let m = r;
+            m = r;
             if (r == "EXCLUIDA COM SUCESSO!") {
                 //  AtualizaCategorias();
                 caixaMsgbox(m);
-                Limpar();
+                Limpar(dados, e);
             } else {
                 m = r;
                 CorpoMsg.style.fontSize = "1em"
@@ -173,9 +177,16 @@
 
     }
     //--------------------------------------------------------------------------------
-    function Limpar() {
+    function Limpar(dados, e) {
 
+        dadosct.map((el, index) => {
 
+            if (el[0] === parseInt(dados[1])) {
+                e.target.parentNode.parentNode.remove() // excluo do html
+                dadosct.splice(index, 1); // excluo do array
+
+            }
+        })
 
         let CampoListaCategoria = document.getElementById("select_categoria");
 
@@ -226,7 +237,7 @@
 
         }).getDataForSearchCt()
     }
-    setDataForSearchCt() // carrega a variavel dadosct
+    setDataForSearchCt() // carrega a variavel dadosct que sao todas as categorias do banco
         //-----------------------------------------------------------------------------------
     function search() {
 
@@ -272,14 +283,15 @@
     //---------------------------------------------------------------------------------------------
     const btnInput = (e) => {
 
-        if (e.target.matches("#searchInput")) {
+            if (e.target.matches("#searchInput")) {
 
-            search()
+                search()
+
+            }
+
 
         }
-
-
-    }
+        //-----------------------------------------------------------------------  
     const btnExcluirEditar = (e) => {
 
         if (e.target.matches(".btn")) {
@@ -291,7 +303,14 @@
 
             } else { // se nao for pra editar entao so pode ser para excluir
 
-                Confirm.Executar(dados)
+                Confirm.Executar(dados, e)
+
+
+
+
+
+
+
             }
             // excluir(e)
 

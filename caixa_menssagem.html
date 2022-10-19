@@ -70,12 +70,12 @@
     
     #CaixaMsg {
         display: none;
-        position: relative;
+        position: absolute;
         border-radius: 7px;
         border: solid black;
         width: 200px;
         height: 160px;
-        top: -40px;
+        top: 75px;
         z-index: 2;
         background-color: white;
     }
@@ -118,9 +118,10 @@
     
     #CaixaMsg>#RodapeMsg {
         position: absolute;
-        /* height: 30%; */
+        width: 100%;
+        display: flex;
         bottom: 5px;
-        left: center;
+        justify-content: space-evenly;
     }
     
     .progress {
