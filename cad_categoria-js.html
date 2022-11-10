@@ -4,8 +4,8 @@
     let Categoria;
     var dadosct;
     let CampoCategoria = document.getElementById("input_cad_categoria_servico");
-    let CampoListaCategoria = document.getElementById("select_categoria");
-    //let CampoListaCategoria = document.querySelector('select_categoria')
+
+
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -15,26 +15,26 @@
         document.getElementById("searchResults").addEventListener("click", btnExcluirEditar);
 
 
-        // document.getElementById("sim").addEventListener("click", () => {
-        //     if (Confirmado())
+        document.getElementById("sim").addEventListener("click", () => {
+            if (Confirmado())
 
-        //         google.script.run.withSuccessHandler(Retorno)
-        //         .SalvarCategoria(Categoria);
+                google.script.run.withSuccessHandler(Retorno)
+                .SalvarCategoria(Categoria);
 
-        //     function Retorno(r) {
+            function Retorno(r) {
 
-        //         Gravando.style.visibility = 'hidden';
-        //         Progresso.style.visibility = 'hidden';
-        //         CaixaConfirmacao.style.display = "none";
-        //         var m = r;
-        //         caixaMsgbox(m);
-        //         document.getElementById("input_cad_categoria_servico").value = "";
+                Gravando.style.visibility = 'hidden';
+                Progresso.style.visibility = 'hidden';
+                CaixaConfirmacao.style.display = "none";
+                var m = r;
+                caixaMsgbox(m);
+                document.getElementById("input_cad_categoria_servico").value = "";
 
-        //     }
-        // });
+            }
+        });
 
 
-        document.getElementById("select_categoria").addEventListener("change", Pesquisar);
+        // document.getElementById("select_categoria").addEventListener("change", Pesquisar);
 
         function Pesquisar() {
 
@@ -60,59 +60,14 @@
             }
 
         }
-        //--------------------------------------------------------------------
-        document.getElementById("btnEditar").addEventListener("click", EditarCategoria);
 
-        function EditarCategoria() {
-
-            let nomeCategoria = CampoListaCategoria.value;
-            let Categoria = CampoCategoria.value;
-
-            nomeCategoria = nomeCategoria.trim();
-            Categoria = Categoria.trim();
-
-
-            if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
-                var m = "PRECISA SELECIONAR CATEGORIA NA LISTA!";
-                caixaMsgbox(m);
-                return
-            }
-
-            if (nomeCategoria == "" || Categoria == "") {
-                var m = "PRECISA PREENCHER TODOS OS CAMPOS!";
-                caixaMsgbox(m);
-                return;
-            }
-
-            var Dados = {
-                nomeCategoria: nomeCategoria,
-                Categoria: Categoria,
-
-            };
-
-            google.script.run.withSuccessHandler(Retorno).EditarCategoria(Dados);
-
-            function Retorno(r) {
-
-                var m = r;
-                caixaMsgbox(m);
-
-                if (r != "CATEGORIA NÃO ENCONTRADA!") {
-                    Limpar();
-                }
-
-            }
-
-        }
-        //---------------------------------------------------------------------        
-        //-------------------------------------------------------------------
-
-        //-------------------------------------------------------------
     })
 
     //------------------------------------------------------------------------
-    var Confirm = new Mensagem();
 
+
+    var Confirm = new Mensagem();
+    //--------------------------------------------------------------------------------
     function Mensagem() {
 
         this.Executar = function(dados, e) {
@@ -127,15 +82,6 @@
 
             RodapeMsg.innerHTML = BtnSim + BtnNao;
             this.Sim = function() {
-
-                // let nomeCategoria = CampoListaCategoria.value;
-
-                // if (nomeCategoria == "" || nomeCategoria == "Escolha uma Categoria") {
-                //     CorpoMsg.innerHTML = "CANCELADO. CAMPO LISTA NÃO PODE SER VAZIO!";
-                //     RodapeMsg.innerHTML = BtnFechar;
-                //     return;
-                // }
-
 
 
                 menssagem = ExcluirCategoria(dados, e); // excluo do banco de dados
@@ -179,25 +125,37 @@
     //--------------------------------------------------------------------------------
     function Limpar(dados, e) {
 
-        dadosct.map((el, index) => {
+        if (e.target.textContent == "Excluir") {
+            dadosct.map((el, index) => {
 
-            if (el[0] === parseInt(dados[1])) {
-                e.target.parentNode.parentNode.remove() // excluo do html
-                dadosct.splice(index, 1); // excluo do array
+                if (el[0] === parseInt(dados[1])) {
+                    e.target.parentNode.parentNode.remove() // excluo do html
+                    dadosct.splice(index, 1); // excluo do array
 
-            }
-        })
+                }
+            })
+        } else
 
-        let CampoListaCategoria = document.getElementById("select_categoria");
+        if (e.target.textContent == "Salvar") {
+
+            let el_imp = e.target.parentNode.parentNode.getElementsByClassName("imp")
+            let nome = el_imp[0].value
+                // e.target.parentNode.parentNode.getElementsByClassName("imp")[0].remove()
+            alert(el_imp[0].innerHTML)
+            el_imp[0].innerHTML = ""
+            el_imp[0].innerHTML = "<td class= 'se-categoria'>" + nome + "</td>"
+                //   el_imp = e.target.parentNode.parentNode.getElementsByClassName("se-categoria")
+
+            //  el_imp[0].innerHTML = "<input class='imp' value=" + el_cat[0].textContent + "> </input>"
+            //   let el_btn = e.target.parentNode.parentNode.getElementsByClassName("btn btn-outline-warning")
+
+            //   el_btn[0].textContent = "Salvar"
+            //   el_btn[0].classList.replace("btn-outline-warning", "btn-outline-success")
 
 
-        // var option = CampoListaCategoria.options[CampoListaCategoria.selectedIndex]
-        var option = CampoListaCategoria.options[1]
+        }
 
-        CampoListaCategoria.remove(CampoListaCategoria.selectedIndex);
-        // let Select = document.getElementById("sel");
-        // M.FormSelect.init(Select);
-        //  M.FormSelect.updateTextFields(CampoListaCategoria);
+
 
     }
     //-------------------------------------------
@@ -225,107 +183,161 @@
 
 
     }
-    //-------------------------------------------------------------------
-    function AtualizaCategorias() {
-        CampoListaCategoria.options.length = -1;
-    }
     //----------------------------------------------------------------------
     function setDataForSearchCt() {
-        google.script.run.withSuccessHandler(function(options) {
 
+        google.script.run.withSuccessHandler(function(options) {
+            // carrega a variavel dadosct que sao todas as categorias do banco
             dadosct = options.slice()
+
 
         }).getDataForSearchCt()
     }
-    setDataForSearchCt() // carrega a variavel dadosct que sao todas as categorias do banco
+
+    setDataForSearchCt()
         //-----------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------
     function search() {
 
-        // dadosct.sort()
-        var searchInput = document.getElementById("searchInput").value.toString().toLowerCase().trim()
+        //// dadosct.sort()
 
-        var searchWords = searchInput.split(/\s+/)
+        createResultInHtml("searchResults", "rowTemplate", [".se-IDt", ".se-categoria"], ResultSearch([0, 1], dadosct))
 
-        var searchColumnar = [0, 1]
-
-        // and or
-        var resultsArray = searchInput === "" ? [] : dadosct.filter(function(r) {
-
-
-            return searchWords.every(function(wordCd) {
-                return searchColumnar.some(function(colIndexCd) {
-                    return r[colIndexCd].toString().toLowerCase().indexOf(wordCd) !== -1
-                })
-            })
-        })
-
-        var searchResultsBox = document.getElementById("searchResults")
-        var templateBox = document.getElementById("rowTemplate")
-        var template = templateBox.content
-
-        searchResultsBox.innerHTML = ""
-
-        resultsArray.forEach(function(r) {
-
-
-            var tr = template.cloneNode(true)
-            var idColuna = tr.querySelector(".se-IDt")
-            var categoriaColuna = tr.querySelector(".se-categoria")
-
-            idColuna.textContent = r[0]
-            categoriaColuna.textContent = r[1]
-
-            searchResultsBox.appendChild(tr)
-
-        })
 
     }
     //---------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------
     const btnInput = (e) => {
 
             if (e.target.matches("#searchInput")) {
 
                 search()
+                add_eventsToButtons(e)
 
             }
 
 
         }
-        //-----------------------------------------------------------------------  
+        //--------------------------------------------------------------------------------------------------------
+    function add_eventsToButtons(e) {
+        let editar = document.getElementsByClassName('btn btn-outline-warning');
+        [...editar].forEach(e => {
+            e.addEventListener('click', () => {
+
+                if (e.textContent === 'Editar') {
+                    e.textContent = 'Salvar'
+
+                    e.classList.replace("btn-outline-warning", "btn-outline-success")
+
+                    var el_cat = e.parentNode.parentNode.getElementsByClassName('se-categoria')
+
+                    el_cat[0].innerHTML = "<input class='imp' value=" + el_cat[0].textContent + "> </input>             "
+                } else {
+
+                    EditarCategoria(e)
+                    e.classList.replace("btn-outline-success", "btn-outline-warning")
+                    let el_id = e.parentNode.parentNode.getElementsByClassName('se-IDt')
+                    var el_cat = e.parentNode.parentNode.getElementsByClassName('se-categoria')
+                    var el_imp = e.parentNode.parentNode.getElementsByClassName('imp')
+
+                    el_cat[0].textContent = el_imp[0].value
+
+                    e.textContent = 'Editar';
+
+                    dadosct.map((el, index) => {
+
+                        if (el[0] === parseInt(el_id[0].textContent)) {
+
+                            dadosct[index][1] = el_cat[0].textContent; // edito no array
+
+                        }
+                    })
+
+                }
+            });
+        });
+
+    }
+    //-----------------------------------------------------------------------  
     const btnExcluirEditar = (e) => {
 
-        if (e.target.matches(".btn")) {
-
-            let dados = e.target.parentNode.parentNode.textContent
-            dados = dados.split(/\s{2,}/) // expressão regular para criar um array dos dados
-
-            if (e.target.textContent == "Editar") {
-
-            } else { // se nao for pra editar entao so pode ser para excluir
-
-                Confirm.Executar(dados, e)
 
 
+        let dados = e.target.parentNode.parentNode.textContent
+        dados = dados.split(/\s{2,}/) // expressão regular para criar um array dos dados
+
+        // if (e.target.textContent == "Editar") {
+        //     let el_cat = e.target.parentNode.parentNode.getElementsByClassName("se-categoria")
+        //     el_cat[0].innerHTML = "<input class='imp' value=" + el_cat[0].textContent + "> </input>"
+        //     let el_btn = e.target.parentNode.parentNode.getElementsByClassName("btn btn-outline-warning")
+
+        //     el_btn[0].textContent = "Salvar"
+        //     el_btn[0].classList.replace("btn-outline-warning", "btn-outline-success")
 
 
+        // } else 
+        // if (e.target.textContent == "Salvar") {
 
+        //     let el_btn = e.target.parentNode.parentNode.getElementsByClassName("btn btn-outline-success")
+        //     el_btn[0].addEventListener("click", EditarCategoria(e))
 
+        // }
+        if (e.target.textContent == "Excluir")
 
-            }
-            // excluir(e)
-
+        {
+            // se nao for pra editar entao so pode ser para excluir
+            Confirm.Executar(dados, e) //exclui
         }
 
 
     }
 
+
+    // }
+    //------------------------------------------------------------------------------------------------
+    function EditarCategoria(e) {
+
+
+        var el_imp = e.parentNode.parentNode.getElementsByClassName("imp")
+
+        let el_id = e.parentNode.parentNode.getElementsByClassName("se-IDt")
+
+        let dadosEdicao = {
+            catId: el_id[0].textContent,
+            catOld: dadosct.filter(el => el[0] === parseInt(el_id[0].textContent))[0][1],
+            catNew: el_imp[0].value
+        }
+
+
+        if (dadosEdicao.catNew.trim() == "") {
+            var m = "PRECISA PREENCHER TODOS OS CAMPOS!";
+            caixaMsgbox(m);
+            return;
+        }
+
+
+        google.script.run.withSuccessHandler(Retorno).EditarCategoria(dadosEdicao);
+
+        function Retorno(r) {
+
+            var m = r;
+            caixaMsgbox(m);
+            let dados = ""
+            if (r != "CATEGORIA NÃO ENCONTRADA!") {
+                Limpar(dados, e);
+            }
+
+        }
+
+    }
+    //-----------------------------------------------------------------------------------------
     function excluir(e) {
-        //var categoria = e.target.firstChild.textContent
+
         var categoria = e.target.parentNode.parentNode.textContent
         categoria = categoria.split(/\s{2,}/)
         var total = categoria.length
-            // var categoria = e.target.childNodes[0].textContent
-        alert("cliquei no botao " + categoria[2] + ", " + categoria[3])
-            // firstChild.textContent
+
     }
 </script>

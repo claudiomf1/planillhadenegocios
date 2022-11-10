@@ -7,8 +7,18 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@types/google-apps-script": "^1.0.55"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claudiomf1/planillhadenegocios.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/claudiomf1/planillhadenegocios/issues"
+  },
+  "homepage": "https://github.com/claudiomf1/planillhadenegocios#readme",
+  "description": ""
 }

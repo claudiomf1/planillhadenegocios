@@ -32,7 +32,7 @@ function FormConfirmacao(form) {
 
     var MostrarForm = Form.evaluate();
 
-    MostrarForm.setTitle(" ").setHeight(450).setWidth(250);
+    MostrarForm.setTitle(" ").setHeight(400).setWidth(250);
 
 
     SpreadsheetApp.getUi().showModalDialog(MostrarForm, " ");
@@ -44,7 +44,7 @@ function CadastrarCategoria() {
     Form.categorias = Categorias()
     var MostrarForm = Form.evaluate();
 
-    MostrarForm.setTitle(" ").setHeight(260).setWidth(450);
+    MostrarForm.setTitle(" ").setHeight(470).setWidth(450);
 
 
     SpreadsheetApp.getUi().showModalDialog(MostrarForm, "CADASTRO DE CATEGORIA");

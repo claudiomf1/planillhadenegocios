@@ -26,7 +26,8 @@
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+        <!-- <script src="selectsearch-component.html" defer>
+        </script> -->
 </head>
 
 <body>
@@ -123,8 +124,13 @@
                 <label for="Obs">Obs</label>
             </div>
 
-            <div style="position: absolute; top: 330px; right: 123px;">
-                <div class="select">
+            <div style="position: absolute; top: 300px; right: 123px;">
+
+                <?!=Include("selectsearch-component")?>
+                    <select-search texto='Comp.#01'></select-search>
+                    <!-- <?!=Include("select-search")?> -->
+                    <!-- <div class="select">
+                    
                     <select class="selectpicker" data-live-search="true" id="select_categoria">
               <option selected>Escolha a categoria...</option>
               <? for(let i=0;i<categorias.length;i++){ ?>
@@ -132,7 +138,7 @@
               <? } ?>
             </select>
 
-                </div>
+                </div> -->
             </div>
             <div class="col s12">
 
@@ -146,13 +152,13 @@
     <i class="material-icons right">send</i>
    </button>
 
-                <button class="btn waves-effect orange" id="btnEditar">Editar
+                <!-- <button class="btn waves-effect orange" id="btnEditar">Editar
     <i class="material-icons right">send</i>
-  </button>
+  </button> -->
 
-                <button class="btn waves-effect red" id="btnExcluir" onclick="Confirm.Executar()">Excluir
+                <!-- <button class="btn waves-effect red" id="btnExcluir" onclick="Confirm.Executar()">Excluir
   <i class="material-icons right">send</i>
-  </button>
+  </button> -->
 
             </div>
 

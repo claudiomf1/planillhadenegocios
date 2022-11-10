@@ -22,7 +22,7 @@ function SalvarCategoria(Categoria) {
         abacategoria.getRange(linha_gravar, 2).setValue(novacategoria);
         SalvarCategoriaLadoCliente(Categoria, inf_id_banco.proximo_id)
 
-        LimitadorDeLinhas(SpreadsheetApp.getActiveSpreadsheet(), "B")
+        LimitadorDeLinhas(SpreadsheetApp.getActiveSpreadsheet(), "A")
         return "REGISTRADO COM SUCESSO!";
     }
 
@@ -125,7 +125,7 @@ function EditarCategoria(Dados) {
         let guiaCategoria = TabelaBanco("categorias")
 
         let ultima_linha_com_dados_categoria = UltimaLinhaCom_dados_Da_Planilha(guiaCategoria, "A")
-        let dadosCategoria = guiaCategoria.getRange("B6:" + "B" + ultima_linha_com_dados_categoria).getValues();
+        let dadosCategoria = guiaCategoria.getRange("A6:" + "B" + ultima_linha_com_dados_categoria).getValues();
 
 
         let linha = 5
@@ -133,10 +133,10 @@ function EditarCategoria(Dados) {
         for (const element of dadosCategoria) {
             linha++
 
-            if (element[0] == Dados.nomeCategoria) {
+            if (element[0] == Dados.catId) {
 
 
-                guiaCategoria.getRange("B" + linha).setValue([Dados.Categoria]);
+                guiaCategoria.getRange("B" + linha).setValue([Dados.catNew]);
 
 
                 dadosCategoria.length = 0;

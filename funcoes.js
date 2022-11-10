@@ -318,7 +318,7 @@
 
      let intervalo = coluna_aba + linha_inicial_dos_dados
 
-     numero_ultimo_registro = aba.getRange(intervalo).getNextDataCell(SpreadsheetApp.Direction.DOWN).getValue()
+     numero_ultimo_registro = parseInt(aba.getRange(intervalo).getNextDataCell(SpreadsheetApp.Direction.DOWN).getValue())
 
      return numero_ultimo_registro + 1
 
@@ -920,7 +920,7 @@
      LoadCustomerCategories(aba, col_da_categoria, (inf_id_front.linha_para_gravar))
          //SpreadsheetApp.getUi().alert("passou " , SpreadsheetApp.getUi().ButtonSet.OK)
 
-     LimitadorDeLinhas(aba, "B")
+     LimitadorDeLinhas(aba, "A")
 
 
      //  }
@@ -949,11 +949,14 @@
      //3
 
      let num_regs = TableConfig(aba)[0][1].linhas_exibir;
+
      let infos_dados = Id(aba, col)
      let total_regs_aba = infos_dados.proximo_id - 1 // numero de ids gravados
 
+
      if (total_regs_aba > num_regs) {
          let total_linhas = aba.getRange("B6:B").getValues().filter(el => el[0] != "").length
+
          let linha_para_recorte = (total_linhas - num_regs) + 1 + 5
              // SpreadsheetApp.getUi().alert("linha_para_recorte " + linha_para_recorte, SpreadsheetApp.getUi().ButtonSet.OK)
          let intervalo_dos_dados = "A" + linha_para_recorte + ":" + UltimaColunaAba(aba)[0][1].ultima_col
